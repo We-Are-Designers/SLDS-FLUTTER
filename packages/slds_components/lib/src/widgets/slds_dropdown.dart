@@ -199,9 +199,14 @@ class _SldsDropdownState<T> extends State<SldsDropdown<T>> {
                 borderRadius: BorderRadius.circular(dimensions.radius2xl),
                 border: Border.all(
                   color: borderColor,
-                  width: widget.enabled
-                      ? dimensions.controlBorderWidth
-                      : dimensions.inputDisabledBorderWidth,
+                  // Error is 1.5px like every other field's Error variant
+                  // (#106); Figma's Dropdown set has no Error variant of its
+                  // own.
+                  width: !widget.enabled
+                      ? dimensions.inputDisabledBorderWidth
+                      : _hasError
+                      ? dimensions.emphasizedBorderWidth
+                      : dimensions.controlBorderWidth,
                 ),
               ),
               child: Row(
@@ -370,7 +375,9 @@ class _SldsDropdownState<T> extends State<SldsDropdown<T>> {
         ],
         if (_hasError ||
             (widget.helpText != null && widget.helpText!.isNotEmpty)) ...[
-          SizedBox(height: dimensions.space4),
+          // Figma: 6px between the field and its help text, as on every
+          // other form field (#91).
+          SizedBox(height: dimensions.space6),
           Text(
             _hasError ? widget.errorText! : widget.helpText!,
             style: tokens.typography.caption1.copyWith(

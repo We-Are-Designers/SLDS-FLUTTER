@@ -35,7 +35,7 @@ class SldsDivider extends StatelessWidget {
     child: SldsButton(
       label: buttonLabel,
       onPressed: onButtonPressed,
-      variant: SldsButtonVariant.tertiary,
+      variant: SldsButtonVariant.ghost,
       size: SldsButtonSize.small,
       leadingIcon: Icons.add,
     ),
@@ -49,7 +49,8 @@ class SldsDivider extends StatelessWidget {
   Widget build(BuildContext context) {
     final tokens = context.slds;
     final dimensions = tokens.dimensions;
-    final lineColor = tokens.colors.borderDefault;
+    // Figma List/Divider (#DDDDDD light), 1px.
+    final lineColor = tokens.colors.borderDecorative;
 
     if (child == null) {
       return Divider(height: 1, thickness: 1, color: lineColor);

@@ -30,7 +30,8 @@ class SldsTabStripItem {
 }
 
 /// Visual container styles for [SldsTabStrip] — mirrors [SldsBottomNav]'s
-/// light/dark choice; independent of the app's own light/dark theme.
+/// light/dark choice. Under a dark theme the strip is always drawn [dark],
+/// as Figma's dark mode draws it, whichever style is passed.
 enum SldsTabStripStyle {
   /// Dark text on a light strip.
   light,
@@ -72,15 +73,15 @@ class SldsTabStrip extends StatelessWidget {
     final tokens = context.slds;
     final colors = tokens.colors;
     final dimensions = tokens.dimensions;
-    final dark = style == SldsTabStripStyle.dark;
+    // Figma's dark mode draws the dark strip (selected pill #010102); the
+    // light style under a dark theme gave a #111111 pill instead (#154).
+    final dark =
+        style == SldsTabStripStyle.dark ||
+        Theme.of(context).brightness == Brightness.dark;
     final track = dark ? colors.surfaceInverse : colors.surfaceSunken;
     // The selected pill must read as raised *above* the track, so it is the
-    // lighter of the two in both styles. No token carries Figma's dark
-    // tab-bar/background, so it is spelled out here rather than borrowed
-    // from a surface token that would invert the relationship.
-    // ponytail: literal #010102, promote to a tab-bar token if a second
-    // component needs it.
-    final pill = dark ? const Color(0xff010102) : colors.surfacePage;
+    // lighter of the two in both styles: Figma's Tab Bar/Background.
+    final pill = dark ? colors.barBackgroundDark : colors.surfacePage;
     final labelColor = dark ? colors.textInverse : colors.textPrimary;
 
     return Container(
